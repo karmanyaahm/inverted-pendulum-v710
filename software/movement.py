@@ -34,14 +34,14 @@ def move(proportion: float, pin):
     pin.pull = digitalio.Pull.DOWN
     time.sleep(off_time)
 
-left_time = 3
-right_time = 3
+left_time = 10
+right_time = 7
 
 # Or, after left_to_input
 while True:
-    for i in range(100):
-        move(0.5, right)
-    for i in range(100):
-        move(0.5, left)
+    for i in range(300):
+        move(1.00, right)
+    for i in range(300):
+        move(1.00, left)
 
 signal.pause()
