@@ -57,7 +57,7 @@ class MotorController:
         counter = 0
         while True:
             start_time = time.time()
-            DELAY = 1e3 # Hertz
+            DELAY = 1e4 # Hertz
             end_time = start_time + 1 / DELAY
             assert -1.0 <= self.speed <= 1.0
 
@@ -94,7 +94,7 @@ class MotorController:
             if curr_time <= end_time:
                 time.sleep(end_time - curr_time)
             else:
-                print("WARNING: loop taking too long to execute.")
+                pass # print("WARNING: loop taking too long to execute.")
 
             counter += 1
 
@@ -174,7 +174,7 @@ class MotorWithMagnetometer:
                 if homing:
                     break
             
-            current_angle = -self.magnetometer.read_angle()
+            current_angle = self.magnetometer.read_angle()
             if self.prev_angle is not None:
                 delta_angle = current_angle - self.prev_angle
                 if delta_angle > 180:
@@ -182,7 +182,7 @@ class MotorWithMagnetometer:
                 elif delta_angle < -180:
                     delta_angle += 360
                 
-                if 30 <= abs(delta_angle):
+                if 25 <= abs(delta_angle):
                     print(f"BAD! Prev: {self.prev_angle}, Current: {current_angle}")
 
                 self.cumulative_angle += delta_angle
@@ -204,10 +204,10 @@ class MotorWithMagnetometer:
                             break
 
                     pid = error * 0.015
-                    pid = max(-0.5, min(0.5, pid))
+                    pid = max(-1, min(1, pid))
                     pid_log.append(pid)  # Log PID value
                     callback(pid)
-                    print(f"Error={error:.2f}, Speed={pid:.2f}")
+                    print(f"Error={error:.2f}, Speed={pid:.2f}, CumAngle={self.cumulative_angle:.2f}, Target={degrees:.2f}")
 
             self.prev_angle = current_angle
 
@@ -235,8 +235,6 @@ if __name__ == "__main__":
     motor.start()
     #motor_step_callback = print
     base_motor_with_magnetometer.move_to(-1000, callback=motor_step_callback, homing=True)
-    for item in cumulative_angle_log:
-        print(item)
     time.sleep(2)
     base_motor_with_magnetometer.move_to(.5, callback=motor_step_callback)
     while True:
