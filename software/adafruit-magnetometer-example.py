@@ -28,3 +28,4 @@ while True:
     # Display the status field if an error occured, etc.
     if SENSOR.last_status > adafruit_mlx90393.STATUS_OK:
         SENSOR.display_status()
+        print(SENSOR.last_status)
