@@ -52,7 +52,7 @@ class MotorController:
     def loop(self):
         PERIOD = 100
         start_time = time.time()
-        DELAY = 1e4 # Hertz
+        DELAY = 1e3 # Hertz
         end_time = start_time + 1 / DELAY
 
         counter = 0
@@ -89,7 +89,7 @@ class MotorController:
                 self.left_limit = False
 
             curr_time = time.time()
-            if curr_time < end_time:
+            if curr_time <= end_time:
                 time.sleep(end_time - curr_time)
             else:
                 print("WARNING: loop taking too long to execute.")
