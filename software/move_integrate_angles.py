@@ -1,27 +1,28 @@
 import math
 import time
 import board
-import adafruit_mlx90393
 import digitalio
 import signal
 import sys
 from threading import Thread, Event
+from burst import FastXY
 
 # TOTAL EXPECTED ANGLE: 7334.25 deg
 class MagnetometerReader:
-    def __init__(self, i2c_address=0x18, oversampling=1, filt=5, resolution=1, gain=adafruit_mlx90393.GAIN_1X):
+    def __init__(self, i2c_address=0x18, oversampling=1, filt=5, resolution=1, gain=FastXY.GAIN_1X):
         i2c = board.I2C()
         time.sleep(.1)
-        self.sensor = adafruit_mlx90393.MLX90393(
+        self.sensor = FastXY(
             i2c, 
             address=i2c_address, 
             oversampling=oversampling, 
             filt=filt, 
             gain=gain
         )
+        self.sensor.start_burst()
 
     def read_angle(self):
-        MX, MY, MZ = self.sensor.magnetic
+        MX, MY = self.sensor.burst_xy()
         degrees = math.degrees(math.atan2(MY, MX))
         #print(f"X: {MX:.2f}, Y: {MY:.2f}, Z: {MZ:.2f}, THETA: {degrees:.2f}", end='\t\t')
         return degrees
