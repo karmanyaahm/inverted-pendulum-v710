@@ -20,10 +20,11 @@ class MagnetometerReader:
             filt=filt, 
             gain=gain
         )
-        self.sensor.start_burst()
 
     def read_angle(self):
-        MX, MY = self.sensor.burst_xy()
+        MX, MY = None, None
+        while MX is None or MY is None:
+            MX, MY = self.sensor.burst_xy()
         degrees = math.degrees(math.atan2(MY, MX))
         #print(f"X: {MX:.2f}, Y: {MY:.2f}, Z: {MZ:.2f}, THETA: {degrees:.2f}", end='\t\t')
         return degrees
@@ -182,7 +183,7 @@ class MotorWithMagnetometer:
                 elif delta_angle < -180:
                     delta_angle += 360
                 
-                if 25 <= abs(delta_angle):
+                if 40 <= abs(delta_angle):
                     print(f"BAD! Prev: {self.prev_angle}, Current: {current_angle}")
 
                 self.cumulative_angle += delta_angle
