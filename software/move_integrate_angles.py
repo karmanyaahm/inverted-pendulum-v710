@@ -51,7 +51,9 @@ class MotorController:
 
     def loop(self):
         PERIOD = 100
-        DELAY = 0.00001
+        start_time = time.time()
+        DELAY = 1e4 # Hertz
+        end_time = start_time + 1 / DELAY
 
         counter = 0
         while True:
@@ -86,7 +88,12 @@ class MotorController:
             else:
                 self.left_limit = False
 
-            time.sleep(DELAY)
+            curr_time = time.time()
+            if curr_time < end_time:
+                time.sleep(end_time - curr_time)
+            else:
+                print("WARNING: loop taking too long to execute.")
+
             counter += 1
 
     def set_speed(self, newspeed):
@@ -195,7 +202,7 @@ class MotorWithMagnetometer:
                             break
 
                     pid = error * 0.015
-                    pid = max(-1, min(1, pid))
+                    pid = max(-0.5, min(0.5, pid))
                     pid_log.append(pid)  # Log PID value
                     callback(pid)
                     print(f"Error={error:.2f}, Speed={pid:.2f}")
