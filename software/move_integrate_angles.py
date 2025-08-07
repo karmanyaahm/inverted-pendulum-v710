@@ -51,12 +51,12 @@ class MotorController:
 
     def loop(self):
         PERIOD = 100
-        start_time = time.time()
-        DELAY = 1e3 # Hertz
-        end_time = start_time + 1 / DELAY
 
         counter = 0
         while True:
+            start_time = time.time()
+            DELAY = 1e3 # Hertz
+            end_time = start_time + 1 / DELAY
             assert -1.0 <= self.speed <= 1.0
 
             speed_abs = abs(self.speed)
