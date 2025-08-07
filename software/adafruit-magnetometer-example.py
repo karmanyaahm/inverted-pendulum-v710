@@ -19,13 +19,14 @@ lasttime = time.monotonic()
 print("LA")
 while True:
     MX, MY = SENSOR.burst_xy()
-    print("[{:.1f}, {:.1f}]".format(time.monotonic(), 1/(time.monotonic() - lasttime)), end = ":\t" )
+    #print("[{:.1f}, {:.1f}]".format(time.monotonic(), 1/(time.monotonic() - lasttime)), end = ":\t" )
     lasttime = time.monotonic()
-    print("X: {:.1f} uT".format(MX), end = "\t")
-    print("Y: {:.1f} uT".format(MY), end = "\t")
-    print('theta-xy-plane: ')
-    print('{:.1f}'.format(math.degrees(math.atan2(MY,MX))))
+    if SENSOR.last_status == adafruit_mlx90393.STATUS_OK:
+        print("X: {:.1f} uT".format(MX), end = "\t")
+        print("Y: {:.1f} uT".format(MY), end = "\t")
+        print('theta-xy-plane: ')
+        print('{:.1f}'.format(math.degrees(math.atan2(MY,MX))))
     # Display the status field if an error occured, etc.
-    if SENSOR.last_status > adafruit_mlx90393.STATUS_OK:
-        SENSOR.display_status()
-        print(SENSOR.last_status)
+    #if SENSOR.last_status > adafruit_mlx90393.STATUS_OK:
+    #    SENSOR.display_status()
+    #    print(SENSOR.last_status)
