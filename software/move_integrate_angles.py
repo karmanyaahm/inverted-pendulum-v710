@@ -6,10 +6,11 @@ import signal
 import sys
 from threading import Thread, Event
 from burst import FastXY
+from adafruit_mlx90393 import GAIN_1X
 
 # TOTAL EXPECTED ANGLE: 7334.25 deg
 class MagnetometerReader:
-    def __init__(self, i2c_address=0x18, oversampling=1, filt=5, resolution=1, gain=FastXY.GAIN_1X):
+    def __init__(self, i2c_address=0x18, oversampling=1, filt=5, resolution=1, gain=GAIN_1X):
         i2c = board.I2C()
         time.sleep(.1)
         self.sensor = FastXY(
